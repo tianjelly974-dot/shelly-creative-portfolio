@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://shelly-creative-portfolio.sturdypear33.chatgpt.site/sitemap.xml

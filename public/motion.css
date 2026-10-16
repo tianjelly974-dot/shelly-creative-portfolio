@@ -1,0 +1,20 @@
+/* Motion enhances the readable, static page; JavaScript opts into entrances. */
+.site-wrap{position:relative;z-index:1}
+.ambient-light{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.ambient-light>span{position:absolute;width:min(65vw,850px);height:min(75vh,720px);border-radius:50%;background:radial-gradient(ellipse,rgba(153,192,248,.24),rgba(176,204,249,.09) 45%,transparent 72%);animation:ambient-drift 22s ease-in-out infinite alternate;will-change:transform}
+.ambient-light>span:first-child{top:-15%;right:-16%}
+.ambient-light>span:last-child{width:min(75vw,950px);height:min(80vh,800px);bottom:-25%;left:-25%;animation-duration:28s;animation-delay:-12s;opacity:.7}
+@keyframes ambient-drift{from{transform:translate3d(-3%,0,0) scale(1)}to{transform:translate3d(9%,12%,0) scale(1.12)}}
+.hero-title-line{display:block}
+.motion-ready .hero-enter{animation:hero-arrive .8s cubic-bezier(.2,.65,.25,1) var(--enter-delay,0ms) both}
+@keyframes hero-arrive{from{opacity:0;translate:0 18px}to{opacity:1;translate:0 0}}
+.motion-ready .reveal-item{opacity:0;translate:0 20px}
+.motion-ready .reveal-item.is-revealed{opacity:1;translate:0 0;transition:opacity .7s cubic-bezier(.2,.65,.25,1),translate .7s cubic-bezier(.2,.65,.25,1),transform .22s,box-shadow .22s;transition-delay:var(--reveal-delay,0ms),var(--reveal-delay,0ms),0ms,0ms}
+.project-cover img{transition:transform .65s cubic-bezier(.2,.65,.25,1)}
+.project-cover>.cover-overlay{position:absolute;inset:auto 0 0;display:flex;align-items:end;justify-content:space-between;gap:16px;padding:46px 22px 20px;background:linear-gradient(transparent,rgba(18,33,62,.82));color:#fff;font:inherit;text-shadow:none;opacity:0;translate:0 10px;transition:opacity .3s,translate .3s;pointer-events:none}
+.cover-project-name{font-size:16px;font-weight:500;line-height:1.55;letter-spacing:0}
+.project-card:focus-visible .cover-overlay{opacity:1;translate:0 0}
+@media(hover:hover) and (pointer:fine){.project-card:hover .project-cover img{transform:scale(1.035)}.project-card:hover .cover-overlay{opacity:1;translate:0 0}}
+@media(hover:none),(pointer:coarse){.project-cover>.cover-overlay{opacity:1;translate:0 0;padding:30px 16px 14px}.cover-project-name{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.ambient-light>span{animation:none;will-change:auto}.motion-ready .hero-enter{animation:none;opacity:1;translate:none}.motion-ready .reveal-item{opacity:1;translate:none}.project-card:hover .project-cover img{transform:none}.project-cover>.cover-overlay{translate:none}}
+@media print{.ambient-light,.cover-overlay{display:none!important}.motion-ready .hero-enter{animation:none}.motion-ready .reveal-item{opacity:1;translate:none}}
