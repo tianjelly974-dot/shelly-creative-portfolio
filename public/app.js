@@ -56,8 +56,32 @@
     });
     dialog.addEventListener('close', () => { image.removeAttribute('src'); if (opener) opener.focus(); });
   }
-  document.querySelectorAll('video').forEach(video => {
-    video.addEventListener('play', () => document.querySelectorAll('video').forEach(other => { if (other !== video) other.pause(); }));
+  const videos = [...document.querySelectorAll('video')];
+  const connection = navigator.connection;
+  const conserveData = connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '');
+  // Prepare metadata only near the viewport. Full buffering starts on intent,
+  // so off-screen videos do not compete with images or the video being watched.
+  const prepareVideo = video => {
+    if (video.preload === 'none') video.preload = 'metadata';
+  };
+  const observer = !conserveData && 'IntersectionObserver' in window
+    ? new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        prepareVideo(entry.target);
+        observer.unobserve(entry.target);
+      });
+    }, { rootMargin: '300px 0px' })
+    : null;
+  videos.forEach(video => {
+    observer?.observe(video);
+    const warmVideo = () => {
+      if (conserveData || videos.some(other => other !== video && !other.paused)) return;
+      video.preload = 'auto';
+    };
+    video.addEventListener('pointerenter', warmVideo, { once: true });
+    video.addEventListener('focus', warmVideo, { once: true });
+    video.addEventListener('play', () => videos.forEach(other => { if (other !== video) other.pause(); }));
     video.addEventListener('error', () => {
       const fallback = video.parentElement.querySelector('.video-fallback');
       if (fallback) fallback.hidden = false;
